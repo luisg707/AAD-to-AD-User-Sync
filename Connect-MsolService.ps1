@@ -1,6 +1,15 @@
+
+##Requirements$Users = (Get-MsolUser | where-Object {$_.ImmutableId -eq $null})
+Write-Output "This Script requires MSOnline & ActiveDirectory Modules"
+$confirmation = Read-Host "Are you Sure You Want To Proceed (Y)?"
+
+if ($confirmation -ne 'Y') {
+  exit 1
+}
+
 Connect-MsolService
- 
-$Users = Get-MsolUser -EnabledFilter EnabledOnly
+#LG: Gets our user list, where ImmutableID is not set
+$Users = (Get-MsolUser | where-Object {$_.ImmutableId -eq $null})
  
 #Gather domain variables
 $Dom = Get-ADDomain
@@ -35,5 +44,5 @@ $Users | Foreach {
         -Surname $_.LastName `
              -UserPrincipalName $_.UserPrincipalName `
              -Path $OU `
-   
+      
     }
